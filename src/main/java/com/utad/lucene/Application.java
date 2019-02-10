@@ -4,6 +4,7 @@ package com.utad.lucene;
 
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.core.SimpleAnalyzer;
+import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
 import org.apache.lucene.document.StringField;
@@ -20,7 +21,7 @@ import java.io.InputStreamReader;
 
 public class Application {
     private static RAMDirectory directory =new RAMDirectory();
-    private static Analyzer analyzer =new SimpleAnalyzer(Version.LUCENE_47);
+    private static Analyzer analyzer = new SimpleAnalyzer(Version.LUCENE_47);
     private static IndexWriterConfig config =new IndexWriterConfig(Version.LUCENE_47,analyzer);
 
     public static void main(String [] args) throws IOException {
@@ -30,6 +31,7 @@ public class Application {
     private static void readCommand() throws IOException {
         String command="";
         while (!command.equals("e")){
+            System.out.println("---------------------------------------");
             System.out.println("(A)dd information - (S)earch information - (E)xit");
             command=  readLine();
             if(command.toLowerCase().equals("a")){
@@ -75,11 +77,17 @@ public class Application {
 
         TopDocs search = searcher.search(query, 10);
         Document document;
-        for(ScoreDoc scoreDoc: search.scoreDocs){
-            document=searcher.doc(scoreDoc.doc);
-            System.out.println("Name ==>" + document.get("name"));
-            System.out.println("Data ==>" + document.get("data"));
+        if(search.totalHits >0){
+            for(ScoreDoc scoreDoc: search.scoreDocs){
+                document=searcher.doc(scoreDoc.doc);
+                System.out.println("Name ==>" + document.get("name"));
+                System.out.println("Data ==>" + document.get("data"));
+            }
+        }else{
+            System.out.println("No document matched your query :(");
+            System.out.println("---------------------------------------");
         }
+
         reader.close();
 
     }
