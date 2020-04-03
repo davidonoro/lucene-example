@@ -82,6 +82,7 @@ public class Application {
                 document=searcher.doc(scoreDoc.doc);
                 System.out.println("Name ==>" + document.get("name"));
                 System.out.println("Data ==>" + document.get("data"));
+                System.out.println("Score ==>"+scoreDoc.score);
             }
         }else{
             System.out.println("No document matched your query :(");
